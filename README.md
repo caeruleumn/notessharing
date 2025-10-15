@@ -1,79 +1,70 @@
 # Notes App (Go + Next.js + Postgres)
 
-Aplikasi catatan sederhana dengan backend Go, frontend Next.js (Tailwind), dan database Postgres. Mendukung autentikasi JWT, CRUD catatan, serta UI biru soft.
+Aplikasi catatan sederhana yang memanfaatkan teknologi modern seperti Go untuk backend, Next.js untuk frontend, dan Postgres sebagai database. Fitur yang tersedia meliputi autentikasi, pembuatan, pengeditan, dan penghapusan catatan.
 
 ---
 
 ## Struktur Proyek
-- `backend/` — API Go
-- `frontend/` — Next.js app (TailwindCSS)
-- `db/` — inisialisasi schema SQL (`init.sql`)
-- `docker-compose.yml` — orkestrasi layanan (db, backend, frontend)
+- `backend/` — API menggunakan Go
+- `frontend/` — Aplikasi Next.js dengan TailwindCSS
+- `db/` — Inisialisasi schema SQL (`init.sql`)
+- `docker-compose.yml` — Mengelola layanan (database, backend, frontend)
 
 ---
 
-## Prasyarat
-- Node.js 18+ dan npm / pnpm / yarn (untuk pengembangan frontend lokal)
-- Go 1.22+ (untuk pengembangan backend lokal)
-- Docker & Docker Compose (untuk menjalankan seluruh stack via kontainer)
+## Panduan Setup Lokal (Tanpa Docker)
 
----
+### 1) Menjalankan Database Postgres
+Anda dapat menggunakan Postgres lokal atau menjalankannya melalui Docker.
 
-## Setup Lokal (tanpa Docker)
-
-### 1) Jalankan Database Postgres
-Anda bisa menggunakan Postgres lokal atau Docker terpisah.
-
-Contoh (Docker satuan):
+Contoh menjalankan Postgres dengan Docker:
 ```bash
-# Membuat Postgres cepat (opsional)
+# Membuat container Postgres
+
 docker run --name notes-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=notesdb -p 5432:5432 -v notes_db_data:/var/lib/postgresql/data -d postgres:15
 ```
 
 Import schema:
-- Jalankan perintah SQL di `db/init.sql` ke database `notesdb` Anda.
+- Jalankan perintah SQL di `db/init.sql` ke database `notesdb`.
 
 ### 2) Backend (Go)
-- Masuk ke direktori `backend/`
-- Buat file `.env` atau gunakan variabel lingkungan berikut:
-```bash
-# .env backend (contoh)
+- Masuk ke folder `backend/`
+- Buat file `.env` atau gunakan konfigurasi berikut:
+```env
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/notesdb?sslmode=disable
 JWT_SECRET=supersecret
 ```
-- Install dependensi dan jalankan:
+- Install dependensi dan jalankan server:
 ```bash
 # dari folder backend
 go mod tidy
 go run .
-# backend akan berjalan di http://localhost:8080
 ```
+Server backend akan berjalan di `http://localhost:8080`.
 
 ### 3) Frontend (Next.js)
-- Masuk ke direktori `frontend/`
-- Buat file `.env.local` seperti berikut:
-```bash
-# .env.local frontend (contoh untuk pengembangan lokal)
+- Masuk ke folder `frontend/`
+- Buat file `.env.local` dengan isi berikut:
+```env
 NEXT_PUBLIC_API_URL=http://localhost:8080
 
-# (Opsional) Integrasi Cloudinary untuk unggah media via frontend
-# Gunakan jika Anda ingin memanfaatkan upload langsung dari UI
+# (Opsional) Konfigurasi Cloudinary untuk upload media
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 ```
-- Install dan jalankan dev server:
+- Install dependensi dan jalankan server frontend:
 ```bash
 # dari folder frontend
 npm install
 npm run dev
-# frontend akan berjalan di http://localhost:3000
 ```
+Server frontend akan berjalan di `http://localhost:3000`.
 
 ---
 
-## Menjalankan dengan Docker Compose (Direkomendasikan)
+## Menjalankan dengan Docker Compose
 
-Semua layanan (db, backend, frontend) bisa dijalankan sekaligus:
+Untuk menjalankan semua layanan sekaligus (database, backend, frontend):
 ```bash
 # dari root project
 docker compose up --build
@@ -82,11 +73,7 @@ docker compose up --build
 - Backend (Go): `http://localhost:8080`
 - Frontend (Next.js): `http://localhost:3000`
 
-Catatan:
-- `frontend` di dalam Docker akan menggunakan `NEXT_PUBLIC_API_URL=http://backend:8080` (sudah diset pada `docker-compose.yml`).
-- Jika ingin override env frontend lain, set di `frontend/.env.production` lalu rebuild.
-
-Hentikan layanan:
+Untuk menghentikan layanan:
 ```bash
 docker compose down
 ```
@@ -104,43 +91,30 @@ JWT_SECRET=supersecret
 ### `frontend/.env.local`
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080
-# opsional untuk unggah media via Cloudinary
+# Konfigurasi opsional untuk Cloudinary
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 ```
 
-> Di lingkungan Docker, `NEXT_PUBLIC_API_URL` sudah diarahkan ke `http://backend:8080` via `docker-compose.yml`.
-
----
-
-## Cara Pakai (Alur Singkat)
-- Akses `http://localhost:3000`
-- Register → Auto-login → Masuk ke halaman Notes
-- Tambah, Edit, Hapus catatan
-- Logout membersihkan token dari localStorage dan cookie
-
 ---
 
 ## Screenshot Aplikasi
-Letakkan screenshot Anda di `frontend/public/` atau folder lain dan referensikan di sini.
 
-Contoh (silakan ganti dengan path file Anda):
+- Halaman Login
 
-- Login
-  
-  ![Login](frontend/public/login-screenshot.png)
+  ![Login](frontend/public/file.svg)
 
-- Notes (Daftar)
-  
-  ![Notes](frontend/public/notes-list-screenshot.png)
+- Daftar Catatan
 
-- Modal Detail Catatan
-  
-  ![Modal](frontend/public/note-modal-screenshot.png)
+  ![Notes](frontend/public/globe.svg)
+
+- Detail Catatan
+
+  ![Modal](frontend/public/next.svg)
 
 ---
 
-## (Opsional) Contoh Log
+## Contoh Log
 
 ### Backend (Go)
 ```text
@@ -159,12 +133,12 @@ Contoh (silakan ganti dengan path file Anda):
 ---
 
 ## Troubleshooting
-- Jika Tailwind warning/error di editor tentang `@apply` atau `@tailwind`, pastikan Tailwind/VSCode plugin aktif; build sebenarnya aman.
-- Jika 401/redirect ke login saat membuka `/notes`, periksa token tersimpan dan `NEXT_PUBLIC_API_URL` mengarah ke backend yang benar.
-- Jika unggah media via Cloudinary tidak muncul, pastikan `NEXT_PUBLIC_CLOUDINARY_*` terisi dan preset upload diaktifkan (unsigned).
+- Jika Tailwind memberikan peringatan atau error terkait `@apply` atau `@tailwind`, pastikan plugin Tailwind di editor aktif. Build tetap aman.
+- Jika terjadi 401 atau redirect ke halaman login saat membuka `/notes`, periksa token yang tersimpan dan pastikan `NEXT_PUBLIC_API_URL` mengarah ke backend yang benar.
+- Jika upload media melalui Cloudinary tidak berhasil, pastikan variabel `NEXT_PUBLIC_CLOUDINARY_*` sudah diisi dengan benar dan preset upload diaktifkan.
 
 ---
 
 ## Lisensi
-Gunakan sesuai kebutuhan Anda.
+Proyek ini bebas digunakan sesuai kebutuhan.
 
