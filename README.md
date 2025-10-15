@@ -102,16 +102,31 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 
 - Halaman Login
 
-  ![Login](frontend/public/file.svg)
+  ![Login](frontend/public/loginnotes.png)
 
-- Daftar Catatan
+- Halaman Register 
 
-  ![Notes](frontend/public/globe.svg)
+  ![Register](frontend/public/registernotes.png)
 
-- Detail Catatan
+- Halaman Semua Notes
 
-  ![Modal](frontend/public/next.svg)
+  ![Notes](frontend/public/allnotes.png)
 
+- Halaman Tambah Notes 
+
+  ![Create](frontend/public/tambahnotes.png)
+
+- Modal Lihat Notes
+
+  ![Read](frontend/public/lihatnotes.png)
+
+- Halaman Edit Notes
+
+  ![Edit](frontend/public/editnotes.png)
+
+- Warning Delete Notes 
+
+  ![Delete](frontend/public/deletenotes.png)
 ---
 
 ## Contoh Log
@@ -135,10 +150,3 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset
 ## Troubleshooting
 - Jika Tailwind memberikan peringatan atau error terkait `@apply` atau `@tailwind`, pastikan plugin Tailwind di editor aktif. Build tetap aman.
 - Jika terjadi 401 atau redirect ke halaman login saat membuka `/notes`, periksa token yang tersimpan dan pastikan `NEXT_PUBLIC_API_URL` mengarah ke backend yang benar.
-- Jika upload media melalui Cloudinary tidak berhasil, pastikan variabel `NEXT_PUBLIC_CLOUDINARY_*` sudah diisi dengan benar dan preset upload diaktifkan.
-
----
-
-## Lisensi
-Proyek ini bebas digunakan sesuai kebutuhan.
-
